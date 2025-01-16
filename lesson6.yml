@@ -1,0 +1,29 @@
+- hosts: ya_cloud
+  tasks:
+    - name: install Nginx
+      ansible.builtin.apt:
+        name: nginx
+        state: latest
+      become: yes
+
+    - name: copy index.html
+      ansible.builtin.copy:
+        src: /home/naum/Documents/learning/hexlet/ansible/files/index.html
+        dest: /usr/share/nginx/html/index.html
+      become: yes
+
+    - name: update Nginx config
+      ansible.builtin.copy:
+        src: /home/naum/Documents/learning/hexlet/ansible/files/nginx.conf
+        dest: /etc/nginx/nginx.conf
+      notify:
+        - restart Nginx
+      become: yes
+
+  handlers:
+    - name: restart Nginx
+      ansible.builtin.service:
+        name: nginx
+        state: reloaded
+      become: yes
+
