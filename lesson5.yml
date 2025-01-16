@@ -1,0 +1,54 @@
+- hosts: ya_cloud
+  become: yes
+  tasks:
+    - name: apt update
+      ansible.builtin.apt:
+        update_cache: yes
+
+    - name: install Git
+      ansible.builtin.apt:
+        name: git
+        state: present
+      tags: [git, config]
+
+    - name: install Nginx
+      ansible.builtin.apt:
+        name: nginx
+        state: latest
+      tags: [nginx, config]
+
+    - name: install Nodejs
+      ansible.builtin.apt:
+        name: nodejs
+        state: present
+      tags: [nodejs, config]
+
+    - name: add user arya
+      ansible.builtin.user:
+        name: arya
+        state: present
+        shell: /bin/bash
+        home: /home/arya
+        create_home: yes
+        password: "{{ '123456' | password_hash('sha512') }}"
+      tags: [arya, users]
+
+    - name: add user sansa
+      ansible.builtin.user:
+        name: sansa
+        state: present
+        shell: /bin/bash
+        home: /home/sansa
+        create_home: yes
+        password: "{{ '123456' | password_hash('sha512') }}"
+      tags: [sansa, users]
+
+    - name: add user tirion
+      ansible.builtin.user:
+        name: tirion
+        state: present
+        shell: /bin/bash
+        home: /home/tirion
+        create_home: yes
+        password: "{{ '123456' | password_hash('sha512') }}"
+      tags: [tirion, users]

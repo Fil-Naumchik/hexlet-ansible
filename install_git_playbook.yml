@@ -1,0 +1,9 @@
+- hosts: ya_cloud
+  tasks:
+    - name: install Git
+      ansible.builtin.apt:
+        name: git
+        state: present
+        update_cache: yes
+      become: yes
+      

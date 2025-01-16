@@ -1,0 +1,12 @@
+---
+- hosts: ya_cloud
+  become: yes
+  tasks:
+    - name: add user
+      ansible.builtin.user:
+        name: kraken
+        state: present
+        shell: /bin/bash
+        home: /home/kraken
+        create_home: yes
+        password: "{{ '123456' | password_hash('sha512') }}"

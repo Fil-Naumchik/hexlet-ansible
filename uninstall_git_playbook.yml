@@ -1,0 +1,8 @@
+- hosts: ya_cloud
+  tasks:
+    - name: uninstall Git
+      ansible.builtin.apt:
+        name: git
+        state: absent
+      become: yes
+      
