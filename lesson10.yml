@@ -1,0 +1,46 @@
+- hosts: ya_cloud, qemu_kvm
+  
+  vars:
+    users:
+      - jaime
+      - robert
+      - ned
+
+  tasks:
+
+    - name: Добавить пользователей jaime, robert, ned
+      ansible.builtin.user:
+        name: "{{ item }}"
+        state: present
+        home: "/home/{{ item }}"
+        create_home: yes
+      loop:
+        "{{ users }}"
+      become: yes
+
+    - name: Добавить файл .gitconfig
+      ansible.builtin.template:
+        src: templates/.gitconfig.j2
+        dest: "/home/{{ item }}/.gitconfig"
+      loop:
+         "{{ users }}"
+      become: yes
+
+    - name: Добавить директорию .ssh
+      ansible.builtin.file:
+        path: "/home/{{ item }}/.ssh"
+        state: directory
+        mode: '0755'
+        owner: "{{ item }}"
+      loop:
+         "{{ users }}"
+      become: yes
+
+    - name: Копировать public key
+      ansible.builtin.copy:
+        src: files/authorized_keys
+        dest: "/home/{{ item }}/.ssh/authorized_keys"
+        owner: "{{ item }}"
+      loop:
+         "{{ users }}"
+      become: yes
