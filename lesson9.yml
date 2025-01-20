@@ -1,0 +1,9 @@
+- hosts: ya_cloud, qemu_kvm
+  gather_facts: no
+  tasks:
+    - name: install git
+      ansible.builtin.apt:
+        name: git
+        state: latest
+        update_cache: yes
+      become: yes
