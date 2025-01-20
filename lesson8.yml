@@ -1,0 +1,35 @@
+- hosts: ya_cloud, qemu_kvm
+  
+  vars:
+    root_dir: /usr/share/nginx/html
+    nginx_port: 8080
+
+  tasks:
+    - name: install Nginx
+      ansible.builtin.apt:
+        name: nginx
+        state: latest
+        update_cache: yes
+      become: yes
+
+    - name: copy index.html
+      ansible.builtin.template:
+        src: templates/index.html.j2
+        dest: "{{root_dir}}/index.html"
+      become: yes
+
+    - name: update Nginx config
+      ansible.builtin.template:
+        src: templates/nginx.conf.j2
+        dest: /etc/nginx/nginx.conf
+      notify:
+        - restart Nginx
+      become: yes
+
+  handlers:
+    - name: restart Nginx
+      ansible.builtin.service:
+        name: nginx
+        state: reloaded
+      become: yes
+
