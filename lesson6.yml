@@ -1,4 +1,9 @@
 - hosts: ya_cloud
+  
+  vars:
+    root_dir: /usr/share/nginx/html
+    nginx_port: 8080
+
   tasks:
     - name: install Nginx
       ansible.builtin.apt:
@@ -9,12 +14,12 @@
     - name: copy index.html
       ansible.builtin.copy:
         src: /home/naum/Documents/learning/hexlet/ansible/files/index.html
-        dest: /usr/share/nginx/html/index.html
+        dest: "{{root_dir}}/index.html"
       become: yes
 
     - name: update Nginx config
-      ansible.builtin.copy:
-        src: /home/naum/Documents/learning/hexlet/ansible/files/nginx.conf
+      ansible.builtin.template:
+        src: templates/nginx.conf.j2
         dest: /etc/nginx/nginx.conf
       notify:
         - restart Nginx
