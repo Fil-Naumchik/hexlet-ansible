@@ -1,0 +1,17 @@
+- hosts: ya_cloud
+  vars:
+    names: This is server "{{ ansible_facts['nodename'] }}"
+
+  tasks:
+    - name: Сохранить информацию о времени в переменную
+      set_fact:
+        os_date: "{{ ansible_facts['date_time'] }}"
+
+    - name: Копирование файла index.html
+      ansible.builtin.template:
+        src: templates/index.html.j2
+        dest: /usr/share/nginx/html/index.html
+      become: yes
+
+
+
