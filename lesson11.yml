@@ -1,0 +1,52 @@
+- hosts: ya_cloud
+
+  vars:
+    users: harold
+    item: harold  
+
+  tasks:
+    - name: Добавление пользователя harold
+      ansible.builtin.user:
+        name: "{{ users }}"
+        state: present
+        home: "/home/{{ users }}"
+        create_home: yes
+        shell: /bin/bash
+      become: yes
+
+    - name: Копирование файла .gitconfig
+      ansible.builtin.template:
+        src: templates/.gitconfig.j2
+        dest: "/home/{{ users }}/.gitconfig"
+      become: yes
+
+    - name: Создание директории .ssh
+      ansible.builtin.file:
+        path: "/home/{{ users }}/.ssh"
+        state: directory
+      become: yes
+
+    - name: Копирование public key
+      ansible.builtin.copy:
+        src: files/authorized_keys
+        dest: "/home/{{ users }}/.ssh/authorized_keys"
+      become: yes
+
+    - name: Установка Git для Ubuntu
+      ansible.builtin.apt:
+        name: git
+        state: latest
+        update_cache: yes
+      become: yes
+      when: ansible_os_family == 'Debian'
+
+    - name: Установка Git для Centos
+      ansible.builtin.yum:
+        name: git
+        state: latest
+        update_cache: yes
+      become: yes
+      when: ansible_os_family == 'RedHat'
+
+
+        
