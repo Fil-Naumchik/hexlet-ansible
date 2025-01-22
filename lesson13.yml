@@ -1,0 +1,25 @@
+- hosts: ya_cloud
+  tasks:
+    - name: Установка Nginx
+      ansible.builtin.apt:
+        name: nginx
+        state: latest
+        update_cache: yes
+      become: yes
+
+    - name: Установка пакета cowsay
+      ansible.builtin.apt:
+        name: cowsay
+        state: present
+      become: yes
+
+    - name: Выполнение команды cowsay
+      ansible.builtin.shell: cowsay "This is server {{ ansible_facts['nodename'] }}!"
+      register: cowsay_result
+#      become: yes
+
+    - name: Копирование файла index.html
+      ansible.builtin.template:
+        src: templates/index.html.j2
+        dest: /var/www/html/index.html
+      become: yes

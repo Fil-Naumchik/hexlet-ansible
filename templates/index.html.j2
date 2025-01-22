@@ -6,7 +6,9 @@
 </head>
 <body>
   <h1>Hello World!</h1>
-  <h2>{{ names | upper }}</h2> <!-- Эта строка была приведена в верхний регистр с помощью фильтра -->
-  <small>{{ os_date }}</small> <!-- Локализованная дата -->
-</body>
-</html>
+  <h2>{{ ansible_facts['nodename'] | upper }}</h2>
+  <pre><code>{{ cowsay_result.stdout }}</code></pre>
+  <small>{{ ansible_facts['date_time']['iso8601'] }}</small>
+
+
+</body></html>
