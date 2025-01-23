@@ -1,0 +1,11 @@
+- hosts: ya_cloud
+  tasks:
+    - name: Установка Git
+      ansible.builtin.apt:
+        name: git
+        state: latest
+        update_cache: yes
+      become: yes
+
+  roles:
+    - role: lesson_15

@@ -1,0 +1,21 @@
+---
+# tasks file for lesson_15
+- name: Добавление пользователя
+  ansible.builtin.user:
+    name: "{{ item }}"
+    shell: /bin/bash
+    state: present
+    home: "/home/{{ item }}"
+    create_home: yes
+    password: "{{ '123456' | password_hash('sha512') }}"
+  become: yes
+  loop:
+    "{{ users }}"
+
+- name: Копирование файла .gitconfig
+  ansible.builtin.template:
+    src: templates/.gitconfig.j2
+    dest: "/home/{{ item }}/.gitconfig"
+  become: yes
+  loop:
+    "{{ users }}"
