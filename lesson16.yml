@@ -1,0 +1,44 @@
+- hosts: qemu_kvm
+  vars:
+    names: zilon
+  
+  pre_tasks:
+
+    - name: Создание пользователя zilon
+      ansible.builtin.user:
+        name: "{{ names }}"
+        state: present
+        home: "/home/{{ names }}"
+        create_home: yes
+        shell: /bin/bash
+      become: yes
+
+    - name: Создание директории .ssh
+      ansible.builtin.file:
+        path: "/home/{{ names }}/.ssh"
+        state: directory
+        mode: "0700"
+      become: yes
+
+  tasks:
+    - name: Установка Nginx
+      ansible.builtin.apt:
+        name: nginx
+        state: latest
+        update_cache: yes
+      become: yes
+
+    - name: Установка Git
+      ansible.builtin.apt:
+        name: git
+        state: latest
+      become: yes
+
+    - name: Копирование публичного ключа
+      ansible.posix.authorized_key:
+        user: "{{ names }}"
+        state: present
+        key: "{{ lookup('file', '/home/naum/Documents/learning/hexlet/ansible/files/authorized_keys') }}"
+      become: yes
+
+
